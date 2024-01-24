@@ -1,0 +1,35 @@
+package components
+
+import  (   "strconv"
+
+    "github.com/OnescuAlex-Vlad/rari/view/layout"
+    "github.com/OnescuAlex-Vlad/rari/models")
+
+
+templ ShowCarPage(car models.Car) {
+    <html>
+        <head>
+            <title>Car</title>
+        </head>
+        @layout.Base() {
+        <body>
+       
+            <h1>Car</h1>
+            <p>
+                Id: {strconv.Itoa(car.Id)}
+            </p>
+            <p>Brand: {car.Brand}</p>
+            <p>Model: {car.Model}</p>
+            <p>Year: {strconv.Itoa(car.Year)}</p>
+            <p>Color: {car.Color}</p>
+            <p>Price: {car.Price}</p>
+            <p>Created at: {car.CreatedAt}</p>
+            <p>Updated at: {car.UpdatedAt}</p>
+            <p>Deleted at: {car.DeletedAt}</p>
+            <a href="/cars">Back</a>
+        
+        </body>
+        }
+    </html>
+    
+}
