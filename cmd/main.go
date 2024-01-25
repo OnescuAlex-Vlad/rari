@@ -12,5 +12,9 @@ func main() {
 	e.GET("/api/v1/car/:id", carHandler.GetCarByIdHandler)
 	e.POST("/api/v1/car", carHandler.CreateCarHandler)
 
+
+	e.GET("/health-check", handlers.HealthCheck)
+
+
 	e.Logger.Fatal(e.Start(":4200"))
 }

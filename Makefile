@@ -1,6 +1,19 @@
 PACKAGES := $(shell go list ./...)
 name := $(shell basename ${PWD})
 
+# Go parameters
+GO := go
+GOBUILD := $(GO) build
+GOTEST := $(GO) test
+GOCLEAN := $(GO) clean
+
+# Main package directory
+CMD_DIR := ./cmd
+MAIN_PACKAGE := main.go
+
+# Output binary name
+BINARY_NAME := rari
+
 all: help
 
 .PHONY: help
@@ -24,14 +37,26 @@ vet:
 	go vet $(PACKAGES)
 
 ## test: run unit tests
-.PHONY: test
-test:
-	go test -race -cover $(PACKAGES)
+# .PHONY: test
+# test:
+# 	go test -race -cover $(PACKAGES)
 
-## build: build a binary
-.PHONY: build
+# ## build: build a binary
+# .PHONY: build
+# build: test
+# 	go build -o cmd/main.go -v
+
+# Test the code
+test:
+	$(GOTEST) -v ./...
+
+# Build the executable
 build: test
-	go build -o ./app -v
+	$(GOBUILD) -o $(BINARY_NAME) $(CMD_DIR)/$(MAIN_PACKAGE)
+
+# Run the application
+run: build
+	air
 
 ## docker-build: build project into a docker container image
 .PHONY: docker-build
@@ -42,11 +67,6 @@ docker-build: test
 .PHONY: docker-run
 docker-run:
 	docker run -it --rm -p 8080:8080 ${name}
-
-## start: build and run local project
-.PHONY: start
-start: build
-	air
 
 ## css: build tailwindcss
 .PHONY: css

@@ -15,8 +15,8 @@ import (
 
 type CarHandler struct{}
 
-func (h CarHandler) GetCarByIdHandler(c echo.Context, dbConn *models.DBConnection) error {
-	db, err := dbConn.CreateConnection()
+func (h CarHandler) GetCarByIdHandler(c echo.Context) error {
+	db, err := models.CreateConnection()
 	if err != nil {
 		log.Println("Error connecting to the database: ", err)
 		return c.String(http.StatusInternalServerError, "Internal Server Error")
@@ -56,7 +56,7 @@ func (h CarHandler) GetCarByIdHandler(c echo.Context, dbConn *models.DBConnectio
 }
 
 func (h CarHandler) GetCarHandler(c echo.Context) error {
-	db, err := CreateConnection()
+	db, err := models.CreateConnection()
 	if err != nil {
 		log.Println("Error connecting to the database: ", err)
 		return c.String(http.StatusInternalServerError, "Internal Server Error")

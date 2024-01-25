@@ -39,17 +39,18 @@ const (
 	DBNAME = "postgres"
 )
 
-func NewDBConnection(username, password, host, database string, port int) *DBConnection {
-	return &DBConnection{
-		Username: username,
-		Password: password,
-		Host:     host,
-		Port:     port,
-		Database: database,
-	}
-}
+// func NewDBConnection(username, password, host, database string, port int) *DBConnection {
+// 	return &DBConnection{
+// 		Username: username,
+// 		Password: password,
+// 		Host:     host,
+// 		Port:     port,
+// 		Database: database,
+// 	}
+// }
 
-func (dbConn *DBConnection) CreateConnection() (*sql.DB, error) {
+// func (dbConn *DBConnection) CreateConnection() (*sql.DB, error) {
+func CreateConnection() (*sql.DB, error) {
 	connStr := fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable",
 		HOST, PORT, USER, PASS, DBNAME)
 
@@ -63,7 +64,7 @@ func (dbConn *DBConnection) CreateConnection() (*sql.DB, error) {
 		return nil, err
 	}
 
-	dbConn.DB = db
+	// dbConn.DB = db
 
 	fmt.Println("check db connection")
 
@@ -72,8 +73,8 @@ func (dbConn *DBConnection) CreateConnection() (*sql.DB, error) {
 }
 
 
-func (dbConn *DBConnection) Close() {
-	if dbConn.DB != nil {
-		dbConn.DB.Close()
-	}
-}
+// func (dbConn *DBConnection) Close() {
+// 	if dbConn.DB != nil {
+// 		dbConn.DB.Close()
+// 	}
+// }
