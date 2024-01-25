@@ -2,8 +2,8 @@ package models
 
 import (
 	"database/sql"
+	"sync"
 	"fmt"
-	"log"
 
 	_ "github.com/lib/pq"
 )
@@ -21,6 +21,16 @@ type Car struct {
 	DeletedAt string `json:"deleted_at"`
 }
 
+type DBConnection struct {
+	Username string
+	Password string
+	Host     string
+	Port     int
+	Database string
+	Mutex    sync.Mutex
+	DB       *sql.DB
+}
+
 const (
 	HOST   = "localhost"
 	PORT   = 5432
@@ -29,7 +39,17 @@ const (
 	DBNAME = "postgres"
 )
 
-func CreateConnection() (*sql.DB, error) {
+func NewDBConnection(username, password, host, database string, port int) *DBConnection {
+	return &DBConnection{
+		Username: username,
+		Password: password,
+		Host:     host,
+		Port:     port,
+		Database: database,
+	}
+}
+
+func (dbConn *DBConnection) CreateConnection() (*sql.DB, error) {
 	connStr := fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable",
 		HOST, PORT, USER, PASS, DBNAME)
 
@@ -43,17 +63,17 @@ func CreateConnection() (*sql.DB, error) {
 		return nil, err
 	}
 
-	fmt.Println("Successfully connected to the PostgreSQL database!")
+	dbConn.DB = db
+
+	fmt.Println("check db connection")
+
 
 	return db, nil
 }
 
-func main() {
-	db, err := CreateConnection()
-	if err != nil {
-		log.Fatal("Error connecting to the database: ", err)
-	}
-	defer db.Close()
 
-	// Your code using the database connection goes here.
+func (dbConn *DBConnection) Close() {
+	if dbConn.DB != nil {
+		dbConn.DB.Close()
+	}
 }
